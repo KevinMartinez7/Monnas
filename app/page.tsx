@@ -333,6 +333,9 @@ const getAvailableTimesForDate = (date: Date) => {
   return availableTimes.filter((time) => !bookedTimes.includes(time))
 }
 
+const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
 
 
 
@@ -694,16 +697,37 @@ const getAvailableTimesForDate = (date: Date) => {
               </Button>
 
               <Button
-                variant="ghost"
-                size="sm"
-                className="md:hidden text-white hover:text-gray-200 transition-all duration-200 hover:scale-110 transform"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
+  variant="ghost"
+  size="sm"
+  className="md:hidden text-white hover:text-gray-200 transition-all duration-200 hover:scale-110 transform"
+  onClick={toggleMobileMenu}
+>
+  {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+</Button>
+
             </div>
           </div>
         </div>
       </header>
+      
+      {mobileMenuOpen && (
+        <nav className="md:hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-90 flex flex-col items-center justify-center space-y-8 z-40">
+          {["Home", "Galeria", "Nosotros", "Servicios", "Contacto"].map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              onClick={(e) => {
+                e.preventDefault()
+                window.scrollTo({ top: document.getElementById(item.toLowerCase())?.offsetTop || 0, behavior: "smooth" })
+                setMobileMenuOpen(false)
+              }}
+              className="text-white text-2xl font-semibold hover:text-pink-400 transition-all duration-200"
+            >
+              {item}
+            </a>
+          ))}
+        </nav>
+      )}
 
       <section className="py-24 px-4">
         <div className="container mx-auto text-center max-w-4xl">
