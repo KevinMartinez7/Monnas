@@ -1087,7 +1087,7 @@ const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
                 </div>
                 <div className="flex items-center justify-center md:justify-start">
                   <Phone className="h-4 w-4 mr-2" />
-                  <span>Contactar por teléfono</span>
+                  <span>249 424-5650</span>
                 </div>
               </div>
             </div>
