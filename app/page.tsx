@@ -739,7 +739,7 @@ const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
               Realza tu belleza natural en
               <span className="text-black"> Monnas</span>
             </h2>
-            <p className="text-xl text-gray-700 mb-8 text-pretty max-w-2xl mx-auto">
+            <p className="text-xl text-black mb-8 text-pretty max-w-2xl mx-auto">
               Especialistas en cosmetología, cejas, pestañas, tricología facial y depilación láser. Cuidados
               personalizados para resaltar tu belleza única.
             </p>
@@ -764,7 +764,7 @@ const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
             </Button>
           </div> */}
 
-          <div className="flex items-center justify-center text-gray-600">
+          <div className="flex items-center justify-center text-black">
             <MapPin className="h-4 w-4 mr-2" />
             <span>Saavedra 841, Tandil, Buenos Aires</span>
           </div>
@@ -1008,7 +1008,7 @@ const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
       <section className="py-16 px-4" id="contacto">
         <div className="container mx-auto max-w-4xl text-center">
           <h3 className="text-3xl font-bold text-black mb-4">Reserva tu Turno</h3>
-          <p className="text-gray-700 text-lg mb-8">
+          <p className="text-black text-lg mb-8">
             Agenda tu cita de forma rápida y sencilla. Nuestro equipo te contactará para confirmar.
           </p>
 
