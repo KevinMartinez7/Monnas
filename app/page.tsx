@@ -1020,7 +1020,7 @@ const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="text-sm text-gray-600">Próximamente: Sistema de reservas online integrado</div>
+              <div className="text-sm text-gray-600">Sistema de reservas online integrado</div>
               <div className="space-y-2">
                 <Button
                   onClick={openCalendar}
