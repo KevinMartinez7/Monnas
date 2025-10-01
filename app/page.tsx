@@ -239,11 +239,19 @@ export default function MonnasLanding() {
     setIsLoading(true)
 
     try {
+      // Función para formatear fecha sin problemas de zona horaria
+      const formatDateLocal = (date: Date) => {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+      }
+
       const reservationData = {
         client_name: clientData.name,
         client_email: clientData.email,
         client_phone: clientData.phone,
-        selected_date: selectedDate.toISOString().split("T")[0],
+        selected_date: formatDateLocal(selectedDate),
         selected_time: selectedTime,
         selected_services: selectedServices,
         comments: clientData.comments,
