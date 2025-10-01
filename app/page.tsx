@@ -56,6 +56,7 @@ export default function MonnasLanding() {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [showSuccessPopup, setShowSuccessPopup] = useState(false)
   const [showMapModal, setShowMapModal] = useState(false)
+  const [showPaymentInfoPopup, setShowPaymentInfoPopup] = useState(false)
 
   const [selectedServices, setSelectedServices] = useState<string[]>([])
   const [clientData, setClientData] = useState({
@@ -67,6 +68,9 @@ export default function MonnasLanding() {
 
   const [bookedAppointments, setBookedAppointments] = useState<{ [key: string]: string[] }>({})
   const [isLoading, setIsLoading] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
 
   const supabase = createClient()
 
@@ -206,6 +210,15 @@ export default function MonnasLanding() {
   }
 
   const openCalendar = () => {
+    setShowPaymentInfoPopup(true)
+  }
+
+  const closePaymentInfoPopup = () => {
+    setShowPaymentInfoPopup(false)
+  }
+
+  const proceedToReservation = () => {
+    setShowPaymentInfoPopup(false)
     setShowCalendar(true)
   }
 
@@ -329,12 +342,6 @@ const getAvailableTimesForDate = (date: Date) => {
   return availableTimes.filter((time) => !bookedTimes.includes(time))
 }
 
-const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
-
-
-
   return (
     <div
       className="min-h-screen"
@@ -369,6 +376,61 @@ const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
                   referrerPolicy="no-referrer-when-downgrade"
                 />
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPaymentInfoPopup && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          onClick={closePaymentInfoPopup}
+        >
+          <div 
+            className="bg-white rounded-lg shadow-xl max-w-md w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold text-gray-900">💳 Información de Pago</h3>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={closePaymentInfoPopup} 
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="mb-6">
+              <div className="bg-pink-50 border border-pink-200 rounded-lg p-4 mb-4">
+                <p className="text-pink-800 text-sm font-medium mb-2">
+                  📌 Recordatorio importante:
+                </p>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  Para confirmar tu reserva, es necesario abonar el <strong>50% del valor del servicio</strong> por transferencia antes de la cita.
+                </p>
+              </div>
+              
+              <div className="text-center text-sm text-gray-600">
+                ¿Estás de acuerdo con esta condición?
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                onClick={proceedToReservation}
+                className="flex-1 bg-pink-500 hover:bg-pink-600 text-white"
+              >
+                Sí, continuar
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={closePaymentInfoPopup} 
+                className="flex-1 bg-transparent border-gray-300 text-gray-700 hover:bg-gray-50"
+              >
+                Cerrar
+              </Button>
             </div>
           </div>
         </div>
