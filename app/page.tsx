@@ -79,7 +79,7 @@ export default function MonnasLanding() {
       const { data: reservations, error } = await supabase
         .from("reservations")
         .select("selected_date, selected_time")
-        .eq("status", "pending")
+        .in("status", ["pending", "confirmed"])
 
       if (error) {
         console.error("Error fetching reservations:", error)
