@@ -127,21 +127,16 @@ export default function MonnasLanding() {
 
   const availableTimes = [
     "09:00",
-    "09:30",
     "10:00",
-    "10:30",
     "11:00",
-    "11:30",
+    "12:00",
     "14:00",
-    "14:30",
     "15:00",
-    "15:30",
     "16:00",
-    "16:30",
     "17:00",
-    "17:30",
     "18:00",
-    "18:30",
+    "19:00",
+    "20:00",
   ]
 
   const availableServices = [
@@ -992,13 +987,13 @@ const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
             >
               <CardHeader>
                 <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Clock className="h-6 w-6 text-black" />
+                  <Heart className="h-6 w-6 text-black" />
                 </div>
                 <CardTitle className="text-white group-hover:text-gray-200 transition-colors duration-200">
-                  Consultas
+                  Masajes
                 </CardTitle>
                 <CardDescription className="text-gray-200">
-                  Evaluación profesional y asesoramiento personalizado para tu rutina de belleza
+                  Técnicas de relajación y bienestar para aliviar tensiones y renovar tu energía
                 </CardDescription>
               </CardHeader>
             </Card>
