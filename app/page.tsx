@@ -16,6 +16,7 @@ import {
   X,
   Check,
   User,
+  Heart,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -149,7 +150,7 @@ export default function MonnasLanding() {
     { id: "tricologia", name: "Tricología Facial", icon: Scissors },
     { id: "depilacion-laser", name: "Depilación Láser", icon: Zap },
     { id: "cuidados-personalizados", name: "Cuidados Personalizados", icon: Star },
-    { id: "consulta", name: "Consulta", icon: Clock },
+    { id: "masajes", name: "Masajes", icon: Heart },
   ]
 
   const generateCalendarDays = () => {
