@@ -133,7 +133,7 @@ export default function AdminDashboard() {
       <div className="space-y-6">
         <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="h-24 bg-gray-200 rounded"></div>
             ))}
@@ -163,11 +163,11 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
+      {/* Header responsive */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard Principal</h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dashboard Principal</h1>
+          <p className="text-gray-600 text-sm sm:text-base">
             Vista general de tu spa - {new Date().toLocaleDateString('es-ES', { 
               weekday: 'long', 
               year: 'numeric', 
@@ -176,26 +176,31 @@ export default function AdminDashboard() {
             })}
           </p>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
           <Button 
             variant="outline"
             onClick={() => setShowAdvanced(true)}
-            className="border-pink-300 text-pink-700 hover:bg-pink-50"
+            className="border-pink-300 text-pink-700 hover:bg-pink-50 w-full sm:w-auto"
           >
             <BarChart3 className="mr-2 h-4 w-4" />
-            Ver Análisis Avanzado
+            <span className="hidden sm:inline">Ver Análisis Avanzado</span>
+            <span className="sm:hidden">Analytics</span>
           </Button>
-          <Button className="bg-pink-500 hover:bg-pink-600" onClick={() => setShowAddModal(true)}>
+          <Button 
+            className="bg-pink-500 hover:bg-pink-600 w-full sm:w-auto" 
+            onClick={() => setShowAddModal(true)}
+          >
             <Plus className="mr-2 h-4 w-4" />
-            Nueva Reserva
+            <span className="hidden sm:inline">Nueva Reserva</span>
+            <span className="sm:hidden">Nueva</span>
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
         {/* Stats Cards */}
-        <div className="lg:col-span-2">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="xl:col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Reservas Hoy</CardTitle>

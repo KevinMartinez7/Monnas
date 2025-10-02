@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { LogOut, Calendar, Users, BarChart3, Settings, Bell } from 'lucide-react'
+import { LogOut, Calendar, Users, BarChart3, Settings, Bell, Menu, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -14,6 +14,7 @@ export default function AdminLayout({
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
 
@@ -58,6 +59,14 @@ export default function AdminLayout({
     router.push('/admin/login')
   }
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
+  }
+
   // Si está en la página de login, no mostrar el layout de admin
   if (pathname === '/admin/login') {
     return <>{children}</>
@@ -89,11 +98,12 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      {/* Header responsive */}
+      <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
+            {/* Logo y título */}
+            <div className="flex items-center space-x-3">
               <Image 
                 src="/images/monnas-logo2.png" 
                 alt="Monnas Logo" 
@@ -101,24 +111,49 @@ export default function AdminLayout({
                 height={32} 
                 className="rounded-full"
               />
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900">Panel de Administración</h1>
-                <p className="text-sm text-gray-500">Monnas Estética</p>
+              <div className="hidden sm:block">
+                <h1 className="text-lg lg:text-xl font-semibold text-gray-900">Panel de Administración</h1>
+                <p className="text-xs lg:text-sm text-gray-500">Monnas Estética</p>
+              </div>
+              <div className="sm:hidden">
+                <h1 className="text-lg font-semibold text-gray-900">Admin</h1>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-600">
-                Administrador
+            {/* Botones de acción */}
+            <div className="flex items-center space-x-2">
+              {/* Botón de logout - desktop */}
+              <div className="hidden md:flex items-center space-x-3">
+                <span className="text-sm text-gray-600">Administrador</span>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleLogout}
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Cerrar Sesión
+                </Button>
               </div>
+
+              {/* Botón de logout - móvil */}
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={handleLogout}
-                className="text-gray-600 hover:text-gray-900"
+                className="md:hidden text-gray-600 hover:text-gray-900"
               >
-                <LogOut className="h-4 w-4 mr-2" />
-                Cerrar Sesión
+                <LogOut className="h-4 w-4" />
+              </Button>
+
+              {/* Botón menú móvil */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleMobileMenu}
+                className="md:hidden"
+              >
+                {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
             </div>
           </div>
@@ -127,77 +162,161 @@ export default function AdminLayout({
 
       {/* Navigation */}
       <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8">
-            <Link
-              href="/admin"
-              className={`flex items-center px-3 py-4 text-sm font-medium transition-colors ${
-                pathname === '/admin'
-                  ? 'text-pink-600 border-b-2 border-pink-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Dashboard
-            </Link>
-            
-            <Link
-              href="/admin/reservations"
-              className={`flex items-center px-3 py-4 text-sm font-medium transition-colors ${
-                pathname === '/admin/reservations'
-                  ? 'text-pink-600 border-b-2 border-pink-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              Reservas
-            </Link>
+        {/* Navegación desktop */}
+        <div className="hidden md:block">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex space-x-8">
+              <Link
+                href="/admin"
+                className={`flex items-center px-3 py-4 text-sm font-medium transition-colors ${
+                  pathname === '/admin'
+                    ? 'text-pink-600 border-b-2 border-pink-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <BarChart3 className="h-4 w-4 mr-2" />
+                Dashboard
+              </Link>
+              
+              <Link
+                href="/admin/reservations"
+                className={`flex items-center px-3 py-4 text-sm font-medium transition-colors ${
+                  pathname === '/admin/reservations'
+                    ? 'text-pink-600 border-b-2 border-pink-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                Reservas
+              </Link>
 
-            <Link
-              href="/admin/calendar"
-              className={`flex items-center px-3 py-4 text-sm font-medium transition-colors ${
-                pathname === '/admin/calendar'
-                  ? 'text-pink-600 border-b-2 border-pink-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              Calendario
-            </Link>
+              <Link
+                href="/admin/calendar"
+                className={`flex items-center px-3 py-4 text-sm font-medium transition-colors ${
+                  pathname === '/admin/calendar'
+                    ? 'text-pink-600 border-b-2 border-pink-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                Calendario
+              </Link>
 
-            <Link
-              href="/admin/notifications"
-              className={`flex items-center px-3 py-4 text-sm font-medium transition-colors ${
-                pathname === '/admin/notifications'
-                  ? 'text-pink-600 border-b-2 border-pink-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <Bell className="h-4 w-4 mr-2" />
-              Notificaciones
-            </Link>
+              <Link
+                href="/admin/notifications"
+                className={`flex items-center px-3 py-4 text-sm font-medium transition-colors ${
+                  pathname === '/admin/notifications'
+                    ? 'text-pink-600 border-b-2 border-pink-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <Bell className="h-4 w-4 mr-2" />
+                Notificaciones
+              </Link>
 
-            <Link
-              href="/admin/clients"
-              className={`flex items-center px-3 py-4 text-sm font-medium transition-colors ${
-                pathname === '/admin/clients'
-                  ? 'text-pink-600 border-b-2 border-pink-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <Users className="h-4 w-4 mr-2" />
-              Clientes
-            </Link>
+              <Link
+                href="/admin/clients"
+                className={`flex items-center px-3 py-4 text-sm font-medium transition-colors ${
+                  pathname === '/admin/clients'
+                    ? 'text-pink-600 border-b-2 border-pink-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Clientes
+              </Link>
 
-            <Link
-              href="/"
-              target="_blank"
-              className="flex items-center px-3 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              Ver Página Principal ↗
-            </Link>
+              <Link
+                href="/"
+                target="_blank"
+                className="flex items-center px-3 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                Ver Página Principal ↗
+              </Link>
+            </div>
           </div>
         </div>
+
+        {/* Navegación móvil */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t bg-white shadow-lg">
+            <div className="px-4 py-2 space-y-1">
+              <Link
+                href="/admin"
+                onClick={closeMobileMenu}
+                className={`flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors ${
+                  pathname === '/admin'
+                    ? 'text-pink-600 bg-pink-50'
+                    : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50'
+                }`}
+              >
+                <BarChart3 className="h-5 w-5 mr-3" />
+                Dashboard
+              </Link>
+              
+              <Link
+                href="/admin/reservations"
+                onClick={closeMobileMenu}
+                className={`flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors ${
+                  pathname === '/admin/reservations'
+                    ? 'text-pink-600 bg-pink-50'
+                    : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50'
+                }`}
+              >
+                <Calendar className="h-5 w-5 mr-3" />
+                Reservas
+              </Link>
+
+              <Link
+                href="/admin/calendar"
+                onClick={closeMobileMenu}
+                className={`flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors ${
+                  pathname === '/admin/calendar'
+                    ? 'text-pink-600 bg-pink-50'
+                    : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50'
+                }`}
+              >
+                <Calendar className="h-5 w-5 mr-3" />
+                Calendario
+              </Link>
+
+              <Link
+                href="/admin/notifications"
+                onClick={closeMobileMenu}
+                className={`flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors ${
+                  pathname === '/admin/notifications'
+                    ? 'text-pink-600 bg-pink-50'
+                    : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50'
+                }`}
+              >
+                <Bell className="h-5 w-5 mr-3" />
+                Notificaciones
+              </Link>
+
+              <Link
+                href="/admin/clients"
+                onClick={closeMobileMenu}
+                className={`flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors ${
+                  pathname === '/admin/clients'
+                    ? 'text-pink-600 bg-pink-50'
+                    : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50'
+                }`}
+              >
+                <Users className="h-5 w-5 mr-3" />
+                Clientes
+              </Link>
+
+              <Link
+                href="/"
+                target="_blank"
+                onClick={closeMobileMenu}
+                className="flex items-center px-3 py-3 text-base font-medium rounded-md text-gray-700 hover:text-pink-600 hover:bg-gray-50 transition-colors"
+              >
+                Ver Página Principal ↗
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Main Content */}

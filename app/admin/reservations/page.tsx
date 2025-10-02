@@ -224,25 +224,31 @@ export default function ReservationsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
+      {/* Header responsive */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gestión de Reservas</h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Gestión de Reservas</h1>
+          <p className="text-gray-600 text-sm sm:text-base">
             Administra todas las reservas de Monnas ({filteredReservations.length} de {reservations.length})
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={exportReservations}>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Button 
+            variant="outline" 
+            onClick={exportReservations}
+            className="w-full sm:w-auto"
+          >
             <Download className="mr-2 h-4 w-4" />
-            Exportar
+            <span className="hidden sm:inline">Exportar</span>
+            <span className="sm:hidden">Export</span>
           </Button>
           <Button 
-            className="bg-pink-500 hover:bg-pink-600"
+            className="bg-pink-500 hover:bg-pink-600 w-full sm:w-auto"
             onClick={() => setShowAddModal(true)}
           >
             <Plus className="mr-2 h-4 w-4" />
-            Nueva Reserva
+            <span className="hidden sm:inline">Nueva Reserva</span>
+            <span className="sm:hidden">Nueva</span>
           </Button>
         </div>
       </div>
@@ -253,7 +259,7 @@ export default function ReservationsPage() {
           <CardTitle className="text-lg">Filtros</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">
                 Buscar cliente
@@ -341,10 +347,10 @@ export default function ReservationsPage() {
                   key={reservation.id} 
                   className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex-1">
-                      {/* Header de la reserva */}
-                      <div className="flex items-center justify-between mb-3">
+                      {/* Header de la reserva responsive */}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 space-y-2 sm:space-y-0">
                         <div className="flex items-center space-x-3">
                           <div className={`w-3 h-3 rounded-full ${
                             reservation.status === 'confirmed' ? 'bg-green-500' : 'bg-yellow-500'
@@ -359,8 +365,8 @@ export default function ReservationsPage() {
                         </div>
                       </div>
 
-                      {/* Detalles de la reserva */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-3">
+                      {/* Detalles de la reserva responsive */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-3">
                         <div className="flex items-center text-sm text-gray-600">
                           <Calendar className="mr-2 h-4 w-4" />
                           <span className="font-medium">
@@ -407,16 +413,17 @@ export default function ReservationsPage() {
                       )}
                     </div>
 
-                    {/* Acciones */}
-                    <div className="flex flex-col gap-2 ml-4">
+                    {/* Acciones responsive */}
+                    <div className="flex flex-row lg:flex-col gap-2 lg:ml-4 mt-3 lg:mt-0">
                       {reservation.status === 'pending' && (
                         <Button
                           size="sm"
                           onClick={() => confirmReservation(reservation.id)}
-                          className="bg-green-500 hover:bg-green-600 text-white"
+                          className="bg-green-500 hover:bg-green-600 text-white flex-1 lg:flex-none"
                         >
                           <CheckCircle className="mr-1 h-3 w-3" />
-                          Confirmar
+                          <span className="hidden sm:inline">Confirmar</span>
+                          <span className="sm:hidden">✓</span>
                         </Button>
                       )}
                       
@@ -424,19 +431,22 @@ export default function ReservationsPage() {
                         variant="outline" 
                         size="sm"
                         onClick={() => handleEditReservation(reservation)}
+                        className="flex-1 lg:flex-none"
                       >
                         <Edit className="mr-1 h-3 w-3" />
-                        Editar
+                        <span className="hidden sm:inline">Editar</span>
+                        <span className="sm:hidden">✎</span>
                       </Button>
                       
                       <Button 
                         variant="outline" 
                         size="sm"
                         onClick={() => deleteReservation(reservation.id, reservation.client_name)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-1 lg:flex-none"
                       >
                         <Trash2 className="mr-1 h-3 w-3" />
-                        Eliminar
+                        <span className="hidden sm:inline">Eliminar</span>
+                        <span className="sm:hidden">🗑</span>
                       </Button>
                     </div>
                   </div>
