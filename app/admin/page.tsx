@@ -14,7 +14,8 @@ import {
   Phone,
   Mail,
   MapPin,
-  BarChart3
+  BarChart3,
+  Eye
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import AddReservationModal from './components/AddReservationModal'
@@ -286,67 +287,80 @@ export default function AdminDashboard() {
               {todayReservations.map((reservation) => (
                 <div 
                   key={reservation.id} 
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors space-y-3 sm:space-y-0"
                 >
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-3 h-3 rounded-full ${
+                  <div className="flex items-start sm:items-center space-x-3 flex-1">
+                    <div className={`w-3 h-3 rounded-full mt-1 sm:mt-0 ${
                       reservation.status === 'confirmed' ? 'bg-green-500' : 
                       reservation.status === 'pending' ? 'bg-yellow-500' : 'bg-gray-400'
                     }`}></div>
                     
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-1">
-                        <h4 className="font-medium text-gray-900">{reservation.client_name}</h4>
-                        <Badge variant={reservation.status === 'confirmed' ? 'default' : 'secondary'}>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 mb-2">
+                        <h4 className="font-medium text-gray-900 truncate">{reservation.client_name}</h4>
+                        <Badge 
+                          variant={reservation.status === 'confirmed' ? 'default' : 'secondary'}
+                          className="w-fit mt-1 sm:mt-0"
+                        >
                           {reservation.status === 'confirmed' ? 'Confirmada' : 'Pendiente'}
                         </Badge>
                       </div>
                       
-                      <div className="flex items-center space-x-4 text-sm text-gray-500">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-1 sm:space-y-0 text-sm text-gray-500">
                         <span className="flex items-center">
-                          <Clock className="mr-1 h-3 w-3" />
+                          <Clock className="mr-1 h-3 w-3 flex-shrink-0" />
                           {reservation.selected_time}
                         </span>
                         {reservation.client_phone && (
-                          <span className="flex items-center">
-                            <Phone className="mr-1 h-3 w-3" />
-                            {reservation.client_phone}
+                          <span className="flex items-center truncate">
+                            <Phone className="mr-1 h-3 w-3 flex-shrink-0" />
+                            <span className="truncate">{reservation.client_phone}</span>
                           </span>
                         )}
                         {reservation.client_email && (
-                          <span className="flex items-center">
-                            <Mail className="mr-1 h-3 w-3" />
-                            {reservation.client_email}
+                          <span className="flex items-center truncate">
+                            <Mail className="mr-1 h-3 w-3 flex-shrink-0" />
+                            <span className="truncate">{reservation.client_email}</span>
                           </span>
                         )}
                       </div>
                       
-                      <div className="mt-1 text-sm text-gray-600">
-                        <strong>Servicios:</strong> {reservation.selected_services.map(getServiceName).join(', ')}
+                      <div className="mt-2 text-sm text-gray-600">
+                        <strong>Servicios:</strong> 
+                        <span className="ml-1">
+                          {reservation.selected_services.map(getServiceName).join(', ')}
+                        </span>
                       </div>
                       
                       {reservation.comments && (
-                        <div className="mt-1 text-sm text-gray-500 italic">
+                        <div className="mt-2 text-sm text-gray-500 italic truncate">
                           "{reservation.comments}"
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex flex-row sm:flex-col items-center space-x-2 sm:space-x-0 sm:space-y-2 sm:ml-4">
                     {reservation.status === 'pending' && (
                       <Button
                         size="sm"
                         onClick={() => confirmReservation(reservation.id)}
-                        className="bg-green-500 hover:bg-green-600 text-white"
+                        className="bg-green-500 hover:bg-green-600 text-white flex-1 sm:flex-none"
                       >
                         <CheckCircle className="mr-1 h-3 w-3" />
-                        Confirmar
+                        <span className="hidden sm:inline">Confirmar</span>
+                        <span className="sm:hidden">✓</span>
                       </Button>
                     )}
                     
-                    <Button variant="outline" size="sm">
-                      Ver Detalles
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="flex-1 sm:flex-none"
+                    >
+                      <Eye className="mr-1 h-3 w-3" />
+                      <span className="hidden sm:inline">Ver Detalles</span>
+                      <span className="sm:hidden">Ver</span>
                     </Button>
                   </div>
                 </div>
