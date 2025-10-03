@@ -68,6 +68,20 @@ export default function AdminLayout({
     setIsMobileMenuOpen(false)
   }
 
+  // Efecto para manejar el scroll del body cuando el menú está abierto
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    // Cleanup cuando el componente se desmonta
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMobileMenuOpen])
+
   // Si está en la página de login, no mostrar el layout de admin
   if (pathname === '/admin/login') {
     return <>{children}</>
@@ -238,83 +252,117 @@ export default function AdminLayout({
           </div>
         </div>
 
-        {/* Navegación móvil */}
+        {/* Navegación móvil - Overlay completo */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t bg-white shadow-lg">
-            <div className="px-4 py-2 space-y-1">
-              <Link
-                href="/admin"
-                onClick={closeMobileMenu}
-                className={`flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors ${
-                  pathname === '/admin'
-                    ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50'
-                }`}
-              >
-                <BarChart3 className="h-5 w-5 mr-3" />
-                Dashboard
-              </Link>
-              
-              <Link
-                href="/admin/reservations"
-                onClick={closeMobileMenu}
-                className={`flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors ${
-                  pathname === '/admin/reservations'
-                    ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50'
-                }`}
-              >
-                <Calendar className="h-5 w-5 mr-3" />
-                Reservas
-              </Link>
+          <div 
+            className="md:hidden fixed inset-0 z-50 bg-black bg-opacity-50 animate-in fade-in duration-200" 
+            onClick={closeMobileMenu}
+          >
+            <div 
+              className="fixed top-16 left-0 right-0 bottom-0 bg-white shadow-2xl overflow-y-auto animate-in slide-in-from-top duration-300" 
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="px-4 py-6 space-y-2">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="text-lg font-semibold text-gray-900">
+                    Navegación
+                  </div>
+                  <button
+                    onClick={closeMobileMenu}
+                    className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                
+                <Link
+                  href="/admin"
+                  onClick={closeMobileMenu}
+                  className={`flex items-center px-4 py-4 text-base font-medium rounded-lg transition-all duration-200 ${
+                    pathname === '/admin'
+                      ? 'text-pink-600 bg-pink-50 border-l-4 border-pink-600 shadow-sm'
+                      : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50 hover:translate-x-1'
+                  }`}
+                >
+                  <BarChart3 className="h-5 w-5 mr-4" />
+                  Dashboard
+                </Link>
+                
+                <Link
+                  href="/admin/reservations"
+                  onClick={closeMobileMenu}
+                  className={`flex items-center px-4 py-4 text-base font-medium rounded-lg transition-all duration-200 ${
+                    pathname === '/admin/reservations'
+                      ? 'text-pink-600 bg-pink-50 border-l-4 border-pink-600 shadow-sm'
+                      : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50 hover:translate-x-1'
+                  }`}
+                >
+                  <Calendar className="h-5 w-5 mr-4" />
+                  Reservas
+                </Link>
 
-              <Link
-                href="/admin/calendar"
-                onClick={closeMobileMenu}
-                className={`flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors ${
-                  pathname === '/admin/calendar'
-                    ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50'
-                }`}
-              >
-                <Calendar className="h-5 w-5 mr-3" />
-                Calendario
-              </Link>
+                <Link
+                  href="/admin/calendar"
+                  onClick={closeMobileMenu}
+                  className={`flex items-center px-4 py-4 text-base font-medium rounded-lg transition-all duration-200 ${
+                    pathname === '/admin/calendar'
+                      ? 'text-pink-600 bg-pink-50 border-l-4 border-pink-600 shadow-sm'
+                      : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50 hover:translate-x-1'
+                  }`}
+                >
+                  <Calendar className="h-5 w-5 mr-4" />
+                  Calendario
+                </Link>
 
-              <Link
-                href="/admin/notifications"
-                onClick={closeMobileMenu}
-                className={`flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors ${
-                  pathname === '/admin/notifications'
-                    ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50'
-                }`}
-              >
-                <Bell className="h-5 w-5 mr-3" />
-                Notificaciones
-              </Link>
+                <Link
+                  href="/admin/notifications"
+                  onClick={closeMobileMenu}
+                  className={`flex items-center px-4 py-4 text-base font-medium rounded-lg transition-all duration-200 ${
+                    pathname === '/admin/notifications'
+                      ? 'text-pink-600 bg-pink-50 border-l-4 border-pink-600 shadow-sm'
+                      : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50 hover:translate-x-1'
+                  }`}
+                >
+                  <Bell className="h-5 w-5 mr-4" />
+                  Notificaciones
+                </Link>
 
-              <Link
-                href="/admin/clients"
-                onClick={closeMobileMenu}
-                className={`flex items-center px-3 py-3 text-base font-medium rounded-md transition-colors ${
-                  pathname === '/admin/clients'
-                    ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50'
-                }`}
-              >
-                <Users className="h-5 w-5 mr-3" />
-                Clientes
-              </Link>
+                <Link
+                  href="/admin/clients"
+                  onClick={closeMobileMenu}
+                  className={`flex items-center px-4 py-4 text-base font-medium rounded-lg transition-all duration-200 ${
+                    pathname === '/admin/clients'
+                      ? 'text-pink-600 bg-pink-50 border-l-4 border-pink-600 shadow-sm'
+                      : 'text-gray-700 hover:text-pink-600 hover:bg-gray-50 hover:translate-x-1'
+                  }`}
+                >
+                  <Users className="h-5 w-5 mr-4" />
+                  Clientes
+                </Link>
 
-              <Link
-                href="/"
-                target="_blank"
-                onClick={closeMobileMenu}
-                className="flex items-center px-3 py-3 text-base font-medium rounded-md text-gray-700 hover:text-pink-600 hover:bg-gray-50 transition-colors"
-              >
-                Ver Página Principal ↗
-              </Link>
+                <div className="border-t border-gray-200 my-6"></div>
+
+                <Link
+                  href="/"
+                  target="_blank"
+                  onClick={closeMobileMenu}
+                  className="flex items-center px-4 py-4 text-base font-medium rounded-lg text-gray-700 hover:text-pink-600 hover:bg-gray-50 hover:translate-x-1 transition-all duration-200"
+                >
+                  <span className="mr-4">🌐</span>
+                  Ver Página Principal
+                </Link>
+
+                <button
+                  onClick={() => {
+                    closeMobileMenu()
+                    handleLogout()
+                  }}
+                  className="flex items-center w-full px-4 py-4 text-base font-medium rounded-lg text-red-600 hover:text-red-700 hover:bg-red-50 hover:translate-x-1 transition-all duration-200"
+                >
+                  <LogOut className="h-5 w-5 mr-4" />
+                  Cerrar Sesión
+                </button>
+              </div>
             </div>
           </div>
         )}
