@@ -1,0 +1,23 @@
+{
+  "name": "Monnas - Centro de Cosmetología & Estética",
+  "short_name": "Monnas",
+  "description": "Centro especializado en cosmetología, cejas, pestañas, tricología facial y depilación láser en Tandil, Buenos Aires.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ec4899",
+  "icons": [
+    {
+      "src": "/images/monnas-logo2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/monnas-logo2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
