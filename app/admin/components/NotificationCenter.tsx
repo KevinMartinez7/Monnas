@@ -324,49 +324,56 @@ export default function NotificationCenter() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-3">
-          <div className="relative">
-            <Bell className="h-8 w-8 text-pink-600" />
+      <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
+        <div className="flex items-start md:items-center space-x-3">
+          <div className="relative flex-shrink-0">
+            <Bell className="h-6 w-6 md:h-8 md:w-8 text-pink-600" />
             {unreadCount > 0 && (
               <Badge className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 min-w-[1.2rem] h-5 flex items-center justify-center rounded-full">
                 {unreadCount}
               </Badge>
             )}
           </div>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Centro de Notificaciones</h1>
-            <p className="text-gray-600">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl md:text-3xl font-bold text-gray-900 break-words">
+              Centro de Notificaciones
+            </h1>
+            <p className="text-sm md:text-base text-gray-600 mt-1">
               Alertas y recordatorios de reservas
             </p>
           </div>
         </div>
         
         {unreadCount > 0 && (
-          <Button variant="outline" onClick={markAllAsRead}>
+          <Button 
+            variant="outline" 
+            onClick={markAllAsRead}
+            className="w-full md:w-auto text-sm"
+          >
             <CheckCircle className="mr-2 h-4 w-4" />
-            Marcar todo como leído
+            <span className="hidden sm:inline">Marcar todo como leído</span>
+            <span className="sm:hidden">Marcar leído</span>
           </Button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
         {/* Configuración de Notificaciones */}
-        <Card>
+        <Card className="xl:col-span-1">
           <CardHeader>
-            <CardTitle className="flex items-center">
+            <CardTitle className="flex items-center text-lg">
               <Settings className="mr-2 h-5 w-5" />
               Configuración
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm">
               Personaliza tus alertas y recordatorios
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
+              <div className="space-y-0.5 min-w-0 flex-1 pr-2">
                 <label className="text-sm font-medium">Notificaciones</label>
                 <p className="text-xs text-muted-foreground">Activar/desactivar todas las notificaciones</p>
               </div>
@@ -377,7 +384,7 @@ export default function NotificationCenter() {
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
+              <div className="space-y-0.5 min-w-0 flex-1 pr-2">
                 <label className="text-sm font-medium">Nuevas Reservas</label>
                 <p className="text-xs text-muted-foreground">Alertas para reservas recientes</p>
               </div>
@@ -388,7 +395,7 @@ export default function NotificationCenter() {
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
+              <div className="space-y-0.5 min-w-0 flex-1 pr-2">
                 <label className="text-sm font-medium">Recordatorios</label>
                 <p className="text-xs text-muted-foreground">Alertas antes de las citas</p>
               </div>
@@ -413,9 +420,9 @@ export default function NotificationCenter() {
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="space-y-0.5 flex items-center">
-                {settings.sound ? <Volume2 className="mr-2 h-4 w-4" /> : <VolumeX className="mr-2 h-4 w-4" />}
-                <div>
+              <div className="space-y-0.5 flex items-center min-w-0 flex-1 pr-2">
+                {settings.sound ? <Volume2 className="mr-2 h-4 w-4 flex-shrink-0" /> : <VolumeX className="mr-2 h-4 w-4 flex-shrink-0" />}
+                <div className="min-w-0 flex-1">
                   <label className="text-sm font-medium">Sonido</label>
                   <p className="text-xs text-muted-foreground">Reproducir sonido de alerta</p>
                 </div>
@@ -427,7 +434,7 @@ export default function NotificationCenter() {
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
+              <div className="space-y-0.5 min-w-0 flex-1 pr-2">
                 <label className="text-sm font-medium">Notificaciones del Sistema</label>
                 <p className="text-xs text-muted-foreground">Mostrar en el escritorio</p>
               </div>
@@ -440,10 +447,10 @@ export default function NotificationCenter() {
         </Card>
 
         {/* Lista de Notificaciones */}
-        <Card className="lg:col-span-2">
+        <Card className="xl:col-span-2">
           <CardHeader>
-            <CardTitle>Notificaciones Activas</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-lg">Notificaciones Activas</CardTitle>
+            <CardDescription className="text-sm">
               {notifications.length === 0 ? 'No hay notificaciones' : `${notifications.length} notificación${notifications.length !== 1 ? 'es' : ''}`}
             </CardDescription>
           </CardHeader>
@@ -459,48 +466,50 @@ export default function NotificationCenter() {
                 {notifications.map((notification) => (
                   <div
                     key={notification.id}
-                    className={`p-4 rounded-lg border transition-all duration-200 ${
+                    className={`p-3 md:p-4 rounded-lg border transition-all duration-200 ${
                       notification.read 
                         ? 'bg-gray-50 border-gray-200 opacity-75' 
                         : getNotificationColor(notification.type, notification.priority)
                     }`}
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-3 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-start space-x-2 md:space-x-3 flex-1 min-w-0">
                         <div className="flex-shrink-0 mt-1">
                           {getNotificationIcon(notification.type)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="text-sm font-medium">{notification.title}</h4>
-                            <Badge variant="outline" className="text-xs">
-                              {notification.type === 'new' && 'Nueva'}
-                              {notification.type === 'upcoming' && 'Próxima'}
-                              {notification.type === 'reminder' && 'Recordatorio'}
-                              {notification.type === 'cancelled' && 'Atrasada'}
-                            </Badge>
-                            {!notification.read && (
-                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            )}
+                          <div className="flex flex-col space-y-1 md:flex-row md:items-center md:space-y-0 md:space-x-2 mb-1">
+                            <h4 className="text-sm font-medium break-words">{notification.title}</h4>
+                            <div className="flex items-center space-x-2">
+                              <Badge variant="outline" className="text-xs flex-shrink-0">
+                                {notification.type === 'new' && 'Nueva'}
+                                {notification.type === 'upcoming' && 'Próxima'}
+                                {notification.type === 'reminder' && 'Recordatorio'}
+                                {notification.type === 'cancelled' && 'Atrasada'}
+                              </Badge>
+                              {!notification.read && (
+                                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
+                              )}
+                            </div>
                           </div>
-                          <p className="text-sm text-gray-700 mb-2">{notification.message}</p>
+                          <p className="text-sm text-gray-700 mb-2 break-words">{notification.message}</p>
                           
                           <div className="text-xs text-gray-500 space-y-1">
-                            <div className="flex items-center space-x-4">
-                              <span className="flex items-center">
-                                <Phone className="mr-1 h-3 w-3" />
-                                {notification.reservation.client_phone}
+                            <div className="flex flex-col space-y-1 md:flex-row md:items-center md:space-y-0 md:space-x-4">
+                              <span className="flex items-center break-all">
+                                <Phone className="mr-1 h-3 w-3 flex-shrink-0" />
+                                <span className="break-all">{notification.reservation.client_phone}</span>
                               </span>
                               <span className="flex items-center">
-                                <Calendar className="mr-1 h-3 w-3" />
+                                <Calendar className="mr-1 h-3 w-3 flex-shrink-0" />
                                 {notification.reservation.selected_date}
                               </span>
                               <span className="flex items-center">
-                                <Clock className="mr-1 h-3 w-3" />
+                                <Clock className="mr-1 h-3 w-3 flex-shrink-0" />
                                 {notification.reservation.selected_time}
                               </span>
                             </div>
-                            <div>
+                            <div className="break-words">
                               <strong>Servicios:</strong> {notification.reservation.selected_services.map(getServiceName).join(', ')}
                             </div>
                             <div className="text-gray-400">
@@ -510,7 +519,7 @@ export default function NotificationCenter() {
                         </div>
                       </div>
                       
-                      <div className="flex items-center space-x-2 ml-2">
+                      <div className="flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-2 flex-shrink-0">
                         {!notification.read && (
                           <Button
                             variant="ghost"
@@ -540,14 +549,14 @@ export default function NotificationCenter() {
       </div>
 
       {/* Estadísticas rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center space-x-2">
-              <Clock className="h-5 w-5 text-blue-500" />
-              <div>
-                <p className="text-sm font-medium">Próximas 2 horas</p>
-                <p className="text-2xl font-bold text-blue-600">
+              <Clock className="h-4 w-4 md:h-5 md:w-5 text-blue-500 flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs md:text-sm font-medium break-words">Próximas 2 horas</p>
+                <p className="text-xl md:text-2xl font-bold text-blue-600">
                   {reservations.filter(r => {
                     const now = new Date()
                     const reservationTime = new Date(`${r.selected_date}T${r.selected_time}`)
@@ -561,12 +570,12 @@ export default function NotificationCenter() {
         </Card>
 
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center space-x-2">
-              <Calendar className="h-5 w-5 text-green-500" />
-              <div>
-                <p className="text-sm font-medium">Hoy</p>
-                <p className="text-2xl font-bold text-green-600">
+              <Calendar className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs md:text-sm font-medium">Hoy</p>
+                <p className="text-xl md:text-2xl font-bold text-green-600">
                   {reservations.filter(r => r.selected_date === new Date().toISOString().split('T')[0]).length}
                 </p>
               </div>
@@ -575,12 +584,12 @@ export default function NotificationCenter() {
         </Card>
 
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center space-x-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-500" />
-              <div>
-                <p className="text-sm font-medium">Pendientes</p>
-                <p className="text-2xl font-bold text-yellow-600">
+              <AlertTriangle className="h-4 w-4 md:h-5 md:w-5 text-yellow-500 flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs md:text-sm font-medium">Pendientes</p>
+                <p className="text-xl md:text-2xl font-bold text-yellow-600">
                   {reservations.filter(r => r.status === 'pending').length}
                 </p>
               </div>
@@ -589,12 +598,12 @@ export default function NotificationCenter() {
         </Card>
 
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center space-x-2">
-              <Bell className="h-5 w-5 text-pink-500" />
-              <div>
-                <p className="text-sm font-medium">Sin leer</p>
-                <p className="text-2xl font-bold text-pink-600">{unreadCount}</p>
+              <Bell className="h-4 w-4 md:h-5 md:w-5 text-pink-500 flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs md:text-sm font-medium">Sin leer</p>
+                <p className="text-xl md:text-2xl font-bold text-pink-600">{unreadCount}</p>
               </div>
             </div>
           </CardContent>
