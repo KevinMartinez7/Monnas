@@ -6,6 +6,17 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { 
   Calendar, 
   Search, 
   Filter, 
@@ -22,6 +33,7 @@ import {
   Eye
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useToast } from '@/hooks/use-toast'
 import AddReservationModal from '../components/AddReservationModal'
 import EditReservationModal from '../components/EditReservationModal'
 
@@ -48,8 +60,9 @@ export default function ReservationsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [dateFilter, setDateFilter] = useState('')
-
+  
   const supabase = createClient()
+  const { toast } = useToast()
 
   // Función para formatear fecha sin problemas de zona horaria
   const formatDateDisplay = (dateString: string) => {
@@ -134,10 +147,6 @@ export default function ReservationsPage() {
   }
 
   const deleteReservation = async (id: string, clientName: string) => {
-    if (!confirm(`¿Estás segura de que quieres eliminar la reserva de ${clientName}?`)) {
-      return
-    }
-
     try {
       const { error } = await supabase
         .from('reservations')
@@ -146,11 +155,20 @@ export default function ReservationsPage() {
 
       if (!error) {
         fetchReservations()
-        alert('Reserva eliminada exitosamente')
+        toast({
+          title: "Reserva eliminada",
+          description: `La reserva de ${clientName} ha sido eliminada exitosamente.`,
+          duration: 5000,
+        })
       }
     } catch (error) {
       console.error('Error deleting reservation:', error)
-      alert('Error al eliminar la reserva')
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar la reserva. Intenta nuevamente.",
+        variant: "destructive",
+        duration: 5000,
+      })
     }
   }
 
@@ -438,16 +456,40 @@ export default function ReservationsPage() {
                         <span className="sm:hidden">✎</span>
                       </Button>
                       
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => deleteReservation(reservation.id, reservation.client_name)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-1 lg:flex-none"
-                      >
-                        <Trash2 className="mr-1 h-3 w-3" />
-                        <span className="hidden sm:inline">Eliminar</span>
-                        <span className="sm:hidden">🗑</span>
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-1 lg:flex-none"
+                          >
+                            <Trash2 className="mr-1 h-3 w-3" />
+                            <span className="hidden sm:inline">Eliminar</span>
+                            <span className="sm:hidden">🗑</span>
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="flex items-center gap-2">
+                              <AlertCircle className="h-5 w-5 text-red-500" />
+                              Confirmar eliminación
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              ¿Estás segura de que quieres eliminar la reserva de <strong>{reservation.client_name}</strong>? 
+                              Esta acción no se puede deshacer.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction 
+                              onClick={() => deleteReservation(reservation.id, reservation.client_name)}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Eliminar
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </div>

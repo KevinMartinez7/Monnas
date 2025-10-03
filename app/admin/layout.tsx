@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { Toaster } from '@/components/ui/toaster'
 import { LogOut, Calendar, Users, BarChart3, Settings, Bell, Menu, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -323,6 +324,9 @@ export default function AdminLayout({
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {children}
       </main>
+      
+      {/* Toaster para notificaciones */}
+      <Toaster />
     </div>
   )
 }

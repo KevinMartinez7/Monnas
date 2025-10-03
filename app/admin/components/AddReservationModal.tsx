@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { X, Calendar, Clock, User, Phone, Mail, Check } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useToast } from '@/hooks/use-toast'
 
 interface AddReservationModalProps {
   isOpen: boolean
@@ -30,6 +31,7 @@ export default function AddReservationModal({ isOpen, onClose, onSuccess }: AddR
   const [selectedTime, setSelectedTime] = useState('')
 
   const supabase = createClient()
+  const { toast } = useToast()
 
   const availableServices = [
     { id: "cosmetologia", name: "Cosmetología" },
@@ -118,19 +120,33 @@ export default function AddReservationModal({ isOpen, onClose, onSuccess }: AddR
 
       if (error) {
         console.error('Error creating reservation:', error)
-        alert('Error al crear la reserva. Intenta nuevamente.')
+        toast({
+          title: "Error al crear reserva",
+          description: "No se pudo crear la reserva. Intenta nuevamente.",
+          variant: "destructive",
+          duration: 5000,
+        })
         return
       }
 
       // Éxito
-      alert('Reserva creada exitosamente!')
+      toast({
+        title: "¡Reserva creada!",
+        description: `La reserva para ${clientData.name} ha sido creada exitosamente.`,
+        duration: 5000,
+      })
       resetForm()
       onSuccess()
       onClose()
 
     } catch (error) {
       console.error('Error in handleSubmit:', error)
-      alert('Error inesperado. Intenta nuevamente.')
+      toast({
+        title: "Error inesperado",
+        description: "Ocurrió un error inesperado. Intenta nuevamente.",
+        variant: "destructive",
+        duration: 5000,
+      })
     } finally {
       setIsLoading(false)
     }

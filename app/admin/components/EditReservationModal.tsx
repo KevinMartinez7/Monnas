@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { X, Calendar, Clock, User, Phone, Mail, Check, Save } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useToast } from '@/hooks/use-toast'
 
 interface Reservation {
   id: string
@@ -45,6 +46,7 @@ export default function EditReservationModal({ isOpen, onClose, onSuccess, reser
   const [selectedStatus, setSelectedStatus] = useState('pending')
 
   const supabase = createClient()
+  const { toast } = useToast()
 
   const availableServices = [
     { id: "cosmetologia", name: "Cosmetología" },
@@ -154,18 +156,32 @@ export default function EditReservationModal({ isOpen, onClose, onSuccess, reser
 
       if (error) {
         console.error('Error updating reservation:', error)
-        alert('Error al actualizar la reserva. Intenta nuevamente.')
+        toast({
+          title: "Error al actualizar",
+          description: "No se pudo actualizar la reserva. Intenta nuevamente.",
+          variant: "destructive",
+          duration: 5000,
+        })
         return
       }
 
       // Éxito
-      alert('Reserva actualizada exitosamente!')
+      toast({
+        title: "¡Reserva actualizada!",
+        description: `La reserva de ${clientData.name} ha sido actualizada exitosamente.`,
+        duration: 5000,
+      })
       onSuccess()
       onClose()
 
     } catch (error) {
       console.error('Error in handleSubmit:', error)
-      alert('Error inesperado. Intenta nuevamente.')
+      toast({
+        title: "Error inesperado",
+        description: "Ocurrió un error inesperado. Intenta nuevamente.",
+        variant: "destructive",
+        duration: 5000,
+      })
     } finally {
       setIsLoading(false)
     }
