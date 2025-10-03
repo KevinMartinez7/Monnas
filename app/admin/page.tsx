@@ -5,6 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { 
   Calendar, 
   Clock, 
   Users, 
@@ -15,7 +22,8 @@ import {
   Mail,
   MapPin,
   BarChart3,
-  Eye
+  Eye,
+  X
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import AddReservationModal from './components/AddReservationModal'
@@ -41,6 +49,8 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [showDetailsModal, setShowDetailsModal] = useState(false)
+  const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null)
   const [stats, setStats] = useState({
     total: 0,
     pending: 0,
@@ -127,6 +137,16 @@ export default function AdminDashboard() {
   const getServiceName = (serviceId: string) => {
     const service = getServiceNames().find(s => s.id === serviceId)
     return service ? service.name : serviceId
+  }
+
+  const handleViewDetails = (reservation: Reservation) => {
+    setSelectedReservation(reservation)
+    setShowDetailsModal(true)
+  }
+
+  const closeDetailsModal = () => {
+    setShowDetailsModal(false)
+    setSelectedReservation(null)
   }
 
   if (isLoading) {
@@ -356,6 +376,7 @@ export default function AdminDashboard() {
                     <Button 
                       variant="outline" 
                       size="sm"
+                      onClick={() => handleViewDetails(reservation)}
                       className="flex-1 sm:flex-none"
                     >
                       <Eye className="mr-1 h-3 w-3" />
@@ -406,6 +427,142 @@ export default function AdminDashboard() {
           fetchReservations() // Recargar datos después de agregar
         }}
       />
+
+      {/* Modal para ver detalles de reserva */}
+      <Dialog open={showDetailsModal} onOpenChange={closeDetailsModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Eye className="h-5 w-5 text-pink-600" />
+              Detalles de la Reserva
+            </DialogTitle>
+            <DialogDescription>
+              Información completa de la reserva seleccionada
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedReservation && (
+            <div className="space-y-6">
+              {/* Información del cliente */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-gray-900 flex items-center">
+                    <Users className="mr-2 h-4 w-4" />
+                    Información del Cliente
+                  </h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center">
+                      <span className="font-medium w-20">Nombre:</span>
+                      <span className="text-gray-700">{selectedReservation.client_name}</span>
+                    </div>
+                    {selectedReservation.client_email && (
+                      <div className="flex items-center">
+                        <Mail className="mr-2 h-3 w-3 text-gray-400" />
+                        <span className="text-gray-700">{selectedReservation.client_email}</span>
+                      </div>
+                    )}
+                    {selectedReservation.client_phone && (
+                      <div className="flex items-center">
+                        <Phone className="mr-2 h-3 w-3 text-gray-400" />
+                        <span className="text-gray-700">{selectedReservation.client_phone}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-gray-900 flex items-center">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Información de la Cita
+                  </h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center">
+                      <span className="font-medium w-16">Fecha:</span>
+                      <span className="text-gray-700">{formatDateDisplay(selectedReservation.selected_date)}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="mr-2 h-3 w-3 text-gray-400" />
+                      <span className="text-gray-700">{selectedReservation.selected_time}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="font-medium w-16">Estado:</span>
+                      <Badge 
+                        variant={selectedReservation.status === 'confirmed' ? 'default' : 'secondary'}
+                        className="ml-1"
+                      >
+                        {selectedReservation.status === 'confirmed' ? 'Confirmada' : 'Pendiente'}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Servicios seleccionados */}
+              <div className="space-y-3">
+                <h3 className="font-semibold text-gray-900">Servicios Seleccionados</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {selectedReservation.selected_services.map((serviceId, index) => (
+                    <div 
+                      key={index}
+                      className="flex items-center p-3 bg-pink-50 border border-pink-200 rounded-lg"
+                    >
+                      <CheckCircle className="mr-2 h-4 w-4 text-pink-600" />
+                      <span className="text-sm font-medium text-pink-700">
+                        {getServiceName(serviceId)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Comentarios */}
+              {selectedReservation.comments && (
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-gray-900">Comentarios Adicionales</h3>
+                  <div className="p-3 bg-gray-50 border rounded-lg">
+                    <p className="text-sm text-gray-700">{selectedReservation.comments}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Información adicional */}
+              <div className="pt-4 border-t border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-500">
+                  <div>
+                    <span className="font-medium">ID de Reserva:</span> {String(selectedReservation.id).slice(0, 8)}...
+                  </div>
+                  <div>
+                    <span className="font-medium">Creada el:</span> {new Date(selectedReservation.created_at).toLocaleString('es-ES')}
+                  </div>
+                </div>
+              </div>
+
+              {/* Acciones */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+                {selectedReservation.status === 'pending' && (
+                  <Button 
+                    onClick={() => {
+                      confirmReservation(selectedReservation.id)
+                      closeDetailsModal()
+                    }}
+                    className="bg-green-500 hover:bg-green-600 text-white flex-1"
+                  >
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    Confirmar Reserva
+                  </Button>
+                )}
+                <Button 
+                  variant="outline" 
+                  onClick={closeDetailsModal}
+                  className="flex-1"
+                >
+                  Cerrar
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
