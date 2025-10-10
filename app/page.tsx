@@ -69,6 +69,10 @@ export default function MonnasLanding() {
   const [bookedAppointments, setBookedAppointments] = useState<{ [key: string]: string[] }>({})
   const [isLoading, setIsLoading] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  
+  // Estados para mostrar mensajes de validación
+  const [showNameValidation, setShowNameValidation] = useState(false)
+  const [showPhoneValidation, setShowPhoneValidation] = useState(false)
 
   const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev)
 
@@ -192,11 +196,21 @@ export default function MonnasLanding() {
 
     // Validación para el campo nombre: solo letras, espacios, tildes y caracteres en español
     if (field === 'name') {
+      const hasInvalidChars = /[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(value);
+      if (hasInvalidChars) {
+        setShowNameValidation(true);
+        setTimeout(() => setShowNameValidation(false), 3000); // Ocultar después de 3 segundos
+      }
       filteredValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
     }
     
     // Validación para el campo teléfono: solo números
     if (field === 'phone') {
+      const hasInvalidChars = /[^0-9]/.test(value);
+      if (hasInvalidChars) {
+        setShowPhoneValidation(true);
+        setTimeout(() => setShowPhoneValidation(false), 3000); // Ocultar después de 3 segundos
+      }
       filteredValue = value.replace(/[^0-9]/g, '');
     }
     
@@ -508,6 +522,12 @@ const getAvailableTimesForDate = (date: Date) => {
                       placeholder="Tu nombre completo"
                       className="mt-1"
                     />
+                    {showNameValidation && (
+                      <p className="text-red-500 text-xs mt-1 flex items-center">
+                        <span className="mr-1">⚠️</span>
+                        Solo se permiten letras y espacios
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
@@ -520,6 +540,12 @@ const getAvailableTimesForDate = (date: Date) => {
                       placeholder="Tu número de teléfono"
                       className="mt-1"
                     />
+                    {showPhoneValidation && (
+                      <p className="text-red-500 text-xs mt-1 flex items-center">
+                        <span className="mr-1">⚠️</span>
+                        Solo se permiten números
+                      </p>
+                    )}
                   </div>
                   <div className="md:col-span-2">
                     <Label htmlFor="email" className="text-sm font-medium text-gray-700">
