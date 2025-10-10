@@ -188,7 +188,22 @@ export default function MonnasLanding() {
   }
 
   const handleClientDataChange = (field: string, value: string) => {
-    setClientData((prev) => ({ ...prev, [field]: value }))
+    let filteredValue = value;
+
+    // Validación para el campo nombre: solo letras, espacios, tildes y caracteres en español
+    if (field === 'name') {
+      filteredValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+    }
+    
+    // Validación para el campo teléfono: solo números
+    if (field === 'phone') {
+      filteredValue = value.replace(/[^0-9]/g, '');
+    }
+    
+    // Campo email sin restricciones (acepta cualquier carácter)
+    // No se aplica filtro al campo email
+
+    setClientData((prev) => ({ ...prev, [field]: filteredValue }))
   }
 
   const isDateSelected = (date: Date) => {
