@@ -321,23 +321,23 @@ export default function ClientManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gestión de Clientes</h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Gestión de Clientes</h1>
+          <p className="text-sm md:text-base text-gray-600">
             Administra y analiza la información de tus clientes
           </p>
         </div>
-        <Button onClick={exportToCSV} className="bg-green-500 hover:bg-green-600">
+        <Button onClick={exportToCSV} className="bg-green-500 hover:bg-green-600 w-full md:w-auto">
           <Download className="mr-2 h-4 w-4" />
           Exportar CSV
         </Button>
       </div>
 
       {/* Estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <Card className="border-l-4 border-l-blue-500">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Clientes</CardTitle>
@@ -394,29 +394,29 @@ export default function ClientManagement() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
         {/* Lista de Clientes */}
-        <Card className="lg:col-span-2">
+        <Card className="xl:col-span-2">
           <CardHeader>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
               <CardTitle className="flex items-center">
                 <Users className="mr-2 h-5 w-5" />
                 Lista de Clientes
               </CardTitle>
-              <div className="flex space-x-2">
+              <div className="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
                     placeholder="Buscar cliente..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-64"
+                    className="pl-10 w-full md:w-64"
                   />
                 </div>
                 <select
                   value={loyaltyFilter}
                   onChange={(e) => setLoyaltyFilter(e.target.value)}
-                  className="px-3 py-2 border rounded-md text-sm"
+                  className="px-3 py-2 border rounded-md text-sm min-w-0 flex-shrink-0"
                 >
                   <option value="all">Todos los niveles</option>
                   <option value="Diamante">Diamante</option>
@@ -437,40 +437,45 @@ export default function ClientManagement() {
                 <div
                   key={`${client.name}-${client.phone}`}
                   onClick={() => setSelectedClient(client)}
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                  className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
                 >
                   <div className="flex items-center space-x-4">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl ${
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl flex-shrink-0 ${
                       client.loyaltyLevel === 'Diamante' ? 'bg-purple-100' :
                       client.loyaltyLevel === 'VIP' ? 'bg-yellow-100' :
                       client.loyaltyLevel === 'Regular' ? 'bg-blue-100' : 'bg-green-100'
                     }`}>
                       {getLoyaltyIcon(client.loyaltyLevel)}
                     </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900">{client.name}</h4>
-                      <div className="flex items-center space-x-3 text-sm text-gray-500">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-medium text-gray-900 truncate">{client.name}</h4>
+                      <div className="flex flex-col space-y-1 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-3 text-sm text-gray-500">
                         <span className="flex items-center">
-                          <Phone className="mr-1 h-3 w-3" />
-                          {client.phone}
+                          <Phone className="mr-1 h-3 w-3 flex-shrink-0" />
+                          <span className="truncate">{client.phone}</span>
                         </span>
                         <span className="flex items-center">
-                          <Calendar className="mr-1 h-3 w-3" />
+                          <Calendar className="mr-1 h-3 w-3 flex-shrink-0" />
                           {client.totalReservations} citas
                         </span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="text-right">
-                    <Badge className={`mb-2 ${getLoyaltyColor(client.loyaltyLevel)}`}>
+                  <div className="flex flex-row justify-between items-center sm:flex-col sm:text-right sm:items-end">
+                    <Badge className={`${getLoyaltyColor(client.loyaltyLevel)} sm:mb-2`}>
                       {client.loyaltyLevel}
                     </Badge>
-                    <div className="text-sm font-medium text-gray-900">
-                      {formatCurrency(client.totalSpent)}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      Última visita: {new Date(client.lastVisit).toLocaleDateString('es-ES')}
+                    <div className="sm:text-right">
+                      <div className="text-sm font-medium text-gray-900">
+                        {formatCurrency(client.totalSpent)}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        Última: {new Date(client.lastVisit).toLocaleDateString('es-ES', { 
+                          day: '2-digit', 
+                          month: '2-digit' 
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
